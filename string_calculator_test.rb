@@ -17,6 +17,10 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(10, "1,2,3,4")
   end
 
+  def test_newline_delimiter
+    assert_add(10, "1\n2\n3\n4")
+  end
+
 
   def assert_add(expected, expression)
     assert_equal(expected, calc.add(expression))
