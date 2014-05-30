@@ -23,6 +23,17 @@ end
 
 class Calculator
   def add(expression)
+    if expression.start_with?("//")
+      expression.gsub!(optional_delimeter(expression), ",")
+    end
     expression.gsub(/\n/, ',').split(",").map(&:to_i).inject(0, :+)
+  end
+
+  def optional_delimeter(expression)
+    string_between(expression, "//", "\n")
+  end
+
+  def string_between(expression, left, right)
+    expression[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
   end
 end
