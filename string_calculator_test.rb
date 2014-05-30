@@ -2,15 +2,24 @@ require 'test/unit'
 
 class StringCalculatorTest < Test::Unit::TestCase
   def test_empty
-    assert_equal(0, calc.add(""))
+    assert_add(0, "")
   end
 
   def test_one
-    assert_equal(1, calc.add("1"))
+    assert_add(1, "1")
   end
 
   def test_two
-    assert_equal(3, calc.add("1,2"))
+    assert_add(3, "1,2")
+  end
+
+  def test_multiple
+    assert_add(10, "1,2,3,4")
+  end
+
+
+  def assert_add(expected, expression)
+    assert_equal(expected, calc.add(expression))
   end
 
   def calc
