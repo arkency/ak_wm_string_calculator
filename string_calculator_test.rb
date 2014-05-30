@@ -6,6 +6,7 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(1, "1")
     assert_add(3, "1,2")
     assert_add(10, "1,2,3,4")
+    assert_add(6, "1\n2,3")
     assert_add(10, "1\n2\n3\n4")
     assert_add(5, "//*\n4*1")
   end
