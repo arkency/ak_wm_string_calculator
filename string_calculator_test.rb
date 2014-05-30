@@ -9,6 +9,9 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(6, "1\n2,3")
     assert_add(10, "1\n2\n3\n4")
     assert_add(5, "//*\n4*1")
+    assert_raise_with_message NegativesNotAllowed, 'negatives are not allowed: -1' do
+      calc.add("1,-1")
+    end
   end
 
   private
