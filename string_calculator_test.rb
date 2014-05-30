@@ -21,7 +21,11 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(10, "1\n2\n3\n4")
   end
 
+  def test_delimiter_change
+    assert_add(5, "//*\n4*1")
+  end
 
+  private
   def assert_add(expected, expression)
     assert_equal(expected, calc.add(expression))
   end
