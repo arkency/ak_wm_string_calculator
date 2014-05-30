@@ -3,25 +3,10 @@ require 'test/unit'
 class StringCalculatorTest < Test::Unit::TestCase
   def test_empty
     assert_add(0, "")
-  end
-
-  def test_one
     assert_add(1, "1")
-  end
-
-  def test_two
     assert_add(3, "1,2")
-  end
-
-  def test_multiple
     assert_add(10, "1,2,3,4")
-  end
-
-  def test_newline_delimiter
     assert_add(10, "1\n2\n3\n4")
-  end
-
-  def test_delimiter_change
     assert_add(5, "//*\n4*1")
   end
 
