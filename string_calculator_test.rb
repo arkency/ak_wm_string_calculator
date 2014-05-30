@@ -1,7 +1,7 @@
 require 'test/unit'
 
 class StringCalculatorTest < Test::Unit::TestCase
-  def test_empty
+  def test_adding
     assert_add(0, "")
     assert_add(1, "1")
     assert_add(3, "1,2")
