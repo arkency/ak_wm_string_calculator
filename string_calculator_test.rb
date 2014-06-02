@@ -9,7 +9,7 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(6, "1\n2,3")
     assert_add(10, "1\n2\n3\n4")
     assert_add(5, "//*\n4*1")
-    assert_raise_with_message NegativesNotAllowed, 'negatives are not allowed: -1' do
+    assert_raise_with_message Calculator::NegativesNotAllowed, 'negatives are not allowed: -1' do
       calc.add("1,-1")
     end
   end
@@ -27,11 +27,16 @@ end
 
 class Calculator
 
+  class NegativesNotAllowed < StandardError; end
+
   def add(expression)
     input = Input.new(expression)
-    input.change_optional_delimiter_to_comma if input.has_optional_delimiter?
-    input.change_newlines_to_comma
-    input.split_by_comma.map(&:to_i).inject(0, :+)
+    numbers = input.get_numbers
+    negative = numbers.find { |num| num < 0 }
+    unless negative.nil?
+      raise NegativesNotAllowed.new("negatives are not allowed: #{negative}")
+    end
+    numbers.inject(0, :+)
   end
 
 end
@@ -39,6 +44,12 @@ end
 class Input
   def initialize(value)
     @value = value
+  end
+
+  def get_numbers
+    change_optional_delimiter_to_comma if has_optional_delimiter?
+    change_newlines_to_comma
+    split_by_comma.map(&:to_i)
   end
 
   def has_optional_delimiter?
