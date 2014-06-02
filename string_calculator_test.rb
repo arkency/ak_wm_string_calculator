@@ -33,13 +33,22 @@ class Calculator
   class NegativesNotAllowed < StandardError; end
 
   def add(expression)
-    input = InputDeserializer.new(expression)
-    numbers = input.get_numbers
+    numbers = deserialize_input(expression)
+    check_for_negatives(numbers)
+    numbers.inject(0, :+)
+  end
+
+  private
+  def deserialize_input(input) 
+    input = InputDeserializer.new(input)
+    input.get_numbers
+  end
+
+  def check_for_negatives(numbers) 
     negative = numbers.find { |num| num < 0 }
     unless negative.nil?
       raise NegativesNotAllowed.new("negatives are not allowed: #{negative}")
     end
-    numbers.inject(0, :+)
   end
 
 end
