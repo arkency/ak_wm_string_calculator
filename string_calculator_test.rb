@@ -50,7 +50,7 @@ class Input
   end
 
   def get_numbers
-    change_optional_delimiter_to_comma if has_optional_delimiter?
+    change_optional_delimiter_to_comma 
     change_newlines_to_comma
     split_by_comma.map(&:to_i)
   end
@@ -60,7 +60,9 @@ class Input
   end
 
   def change_optional_delimiter_to_comma
-    @value.gsub!(optional_delimiter, ",")
+    if has_optional_delimiter?
+      @value.gsub!(optional_delimiter, ",")
+    end
   end
 
   def change_newlines_to_comma
