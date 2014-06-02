@@ -33,7 +33,7 @@ class Calculator
   class NegativesNotAllowed < StandardError; end
 
   def add(expression)
-    input = Input.new(expression)
+    input = InputDeserializer.new(expression)
     numbers = input.get_numbers
     negative = numbers.find { |num| num < 0 }
     unless negative.nil?
@@ -44,7 +44,7 @@ class Calculator
 
 end
 
-class Input
+class InputDeserializer
   def initialize(value)
     @value = value
   end
