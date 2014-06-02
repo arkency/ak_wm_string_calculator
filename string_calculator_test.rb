@@ -55,14 +55,22 @@ class InputDeserializer
     split_by_comma.map(&:to_i)
   end
 
-  def has_optional_delimiter?
-    @value.start_with?("//")
-  end
-
   def change_optional_delimiter_to_comma
     if has_optional_delimiter?
       @value.gsub!(optional_delimiter, ",")
     end
+  end
+
+  def has_optional_delimiter?
+    @value.start_with?("//")
+  end
+
+  def optional_delimiter
+    between("//", "\n")
+  end
+
+  def between(left, right)
+    @value[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
   end
 
   def change_newlines_to_comma
@@ -73,11 +81,4 @@ class InputDeserializer
     @value.split(",")
   end
 
-  def optional_delimiter
-    between("//", "\n")
-  end
-
-  def between(left, right)
-    @value[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
-  end
 end
