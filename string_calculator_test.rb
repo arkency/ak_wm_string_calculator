@@ -45,10 +45,12 @@ class Calculator
   end
 
   def check_for_negatives(numbers) 
-    negative = numbers.find { |num| num < 0 }
-    unless negative.nil?
-      raise NegativesNotAllowed.new("negatives are not allowed: #{negative}")
-    end
+    negatives = numbers.select { |num| num < 0 }
+    raise_negatives_not_allowed(negatives) unless negatives.empty?
+  end
+
+  def raise_negatives_not_allowed(negatives)
+    raise NegativesNotAllowed.new("negatives are not allowed: #{negatives.join(", ")}")
   end
 
 end
