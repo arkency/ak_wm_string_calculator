@@ -9,17 +9,19 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(6, "1\n2,3")
     assert_add(10, "1\n2\n3\n4")
     assert_add(5, "//*\n4*1")
-    assert_raise_with_message Calculator::NegativesNotAllowed, 'negatives are not allowed: -1' do
-      calc.add("1,-1")
-    end
-    assert_raise_with_message Calculator::NegativesNotAllowed, 'negatives are not allowed: -1, -5, -7' do
-      calc.add("1,-1,2,3,4,-5,-7")
-    end
+    assert_not_allowed('negatives are not allowed: -1', "1,-1")
+    assert_not_allowed('negatives are not allowed: -1, -5, -7', "1,-1,2,3,4,-5,-7")
   end
 
   private
   def assert_add(expected, expression)
     assert_equal(expected, calc.add(expression))
+  end
+
+  def assert_not_allowed(message, expression)
+    assert_raise_with_message Calculator::NegativesNotAllowed, message do
+      calc.add(expression)
+    end
   end
 
   def calc
