@@ -12,6 +12,9 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_raise_with_message Calculator::NegativesNotAllowed, 'negatives are not allowed: -1' do
       calc.add("1,-1")
     end
+    assert_raise_with_message Calculator::NegativesNotAllowed, 'negatives are not allowed: -1, -5, -7' do
+      calc.add("1,-1,2,3,4,-5,-7")
+    end
   end
 
   private
