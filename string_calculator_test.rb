@@ -50,7 +50,11 @@ class Calculator
   end
 
   def raise_negatives_not_allowed(negatives)
-    raise NegativesNotAllowed.new("negatives are not allowed: #{negatives.join(", ")}")
+    raise NegativesNotAllowed.new(negatives_message(negatives))
+  end
+
+  def negatives_message(negatives)
+    "negatives are not allowed: #{negatives.join(", ")}"
   end
 
 end
