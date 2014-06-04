@@ -76,13 +76,19 @@ module StringCalculator
     end
 
     def get_numbers
-      change_optional_delimiter_to_comma 
-      change_newlines_to_comma
-      split_by_comma.map(&:to_i)
+      split_by_delimiters.map(&:to_i)
     end
 
-    def change_optional_delimiter_to_comma
-      @value.gsub!(optional_delimiter, ",") if has_optional_delimiter?
+    def delimiters
+      default_delimiters + optional_delimiters
+    end
+
+    def default_delimiters
+      [",", "\n"]
+    end
+
+    def optional_delimiters
+      has_optional_delimiter? ? [optional_delimiter] : []
     end
 
     def has_optional_delimiter?
@@ -109,12 +115,12 @@ module StringCalculator
       string[/#{Regexp.escape(left)}(.+)#{Regexp.escape(right)}/m, 1]
     end
 
-    def change_newlines_to_comma
-      @value.gsub!(/\n/, ',')
+    def split_by_delimiters
+      @value.split(delimiters_regexp)
     end
 
-    def split_by_comma
-      @value.split(",")
+    def delimiters_regexp
+      Regexp.new(delimiters.map{|delimiter| Regexp.escape(delimiter)}.join("|"))
     end
 
   end
