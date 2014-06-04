@@ -90,12 +90,19 @@ class InputDeserializer
   end
 
   def optional_delimiter
-    delimiter_part = between(@value, "//", "\n")
-    if delimiter_part.start_with?("[") and delimiter_part.end_with?("]")
-      between(delimiter_part, "[", "]")
-    else
-      delimiter_part
-    end
+    bracket_delimiter_declaration? ? between_brackets_part : delimiter_declaration
+  end
+
+  def between_brackets_part
+    between(delimiter_declaration, "[", "]")
+  end
+
+  def bracket_delimiter_declaration?
+    delimiter_declaration.start_with?("[") and delimiter_declaration.end_with?("]")
+  end
+
+  def delimiter_declaration
+    between(@value, "//", "\n")
   end
 
   def between(string, left, right)
