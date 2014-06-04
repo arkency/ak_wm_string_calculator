@@ -12,7 +12,7 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(2, "1001,2")
     assert_add(6, "//[***]\n1***2***3***2000")
     assert_add(6, "//[]]]\n1]]2]]3]]2000")
-    #assert_add(6, "//[*][]]\n1]2*3")
+    assert_add(6, "//[*][]]\n1]2*3")
     assert_not_allowed('negatives are not allowed: -1', "1,-1")
     assert_not_allowed('negatives are not allowed: -1, -5, -7', "1,-1,2,3,4,-5,-7")
   end
@@ -107,7 +107,7 @@ module StringCalculator
     end
 
     def delimiters
-      has_optional_delimiter? ? [optional_delimiter] : []
+      has_optional_delimiter? ? optional_delimiters : []
     end
 
     private
@@ -116,12 +116,12 @@ module StringCalculator
       @line.start_with?("//")
     end
 
-    def optional_delimiter
-      bracket_delimiter_declaration? ? between_brackets_part : delimiter_declaration
+    def optional_delimiters
+      bracket_delimiter_declaration? ? between_brackets_delimiters : [delimiter_declaration]
     end
 
-    def between_brackets_part
-      between(delimiter_declaration, "[", "]")
+    def between_brackets_delimiters
+      [between(delimiter_declaration, "[", "]")]
     end
 
     def bracket_delimiter_declaration?
