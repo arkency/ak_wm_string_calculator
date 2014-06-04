@@ -70,7 +70,7 @@ class InputDeserializer
   def get_numbers
     change_optional_delimiter_to_comma 
     change_newlines_to_comma
-    split_by_comma.map(&:to_i)
+    split_by_comma.map(&:to_i).delete_if{ |x| x > 1000 } 
   end
 
   def change_optional_delimiter_to_comma
