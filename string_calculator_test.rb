@@ -125,7 +125,7 @@ module StringCalculator
     end
 
     def bracket_delimiter_declaration?
-      delimiter_declaration.start_with?("[") and delimiter_declaration.end_with?("]")
+      delimiter_declaration.start_with?("[")
     end
 
     def delimiter_declaration
