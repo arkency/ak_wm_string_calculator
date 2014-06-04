@@ -96,11 +96,24 @@ module StringCalculator
     end
 
     def optional_delimiters
+      OptionalDelimitersParser.new(@value).delimiters
+    end
+
+  end
+
+  class OptionalDelimitersParser
+    def initialize(line)
+      @line = line
+    end
+
+    def delimiters
       has_optional_delimiter? ? [optional_delimiter] : []
     end
 
+    private
+
     def has_optional_delimiter?
-      @value.start_with?("//")
+      @line.start_with?("//")
     end
 
     def optional_delimiter
@@ -116,12 +129,11 @@ module StringCalculator
     end
 
     def delimiter_declaration
-      between(@value, "//", "\n")
+      between(@line, "//", "\n")
     end
 
     def between(string, left, right)
       string[/#{Regexp.escape(left)}(.+)#{Regexp.escape(right)}/m, 1]
     end
-
   end
 end
