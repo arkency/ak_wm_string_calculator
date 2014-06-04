@@ -107,7 +107,7 @@ class InputDeserializer
   end
 
   def between(string, left, right)
-    string.sub(left, '').reverse.sub(right, '').reverse
+    string.sub(left, '').reverse.sub(right.reverse, '').reverse
   end
 
   def between_first_occurance(string, left, right)
