@@ -39,7 +39,7 @@ class Calculator
   def add(expression)
     numbers = deserialize_input(expression)
     check_for_negatives(numbers)
-    numbers = delete_greater_than_1000.numbers
+    numbers = delete_greater_than_1000(numbers)
     numbers.inject(0, :+)
   end
 
