@@ -39,6 +39,7 @@ class Calculator
   def add(expression)
     numbers = deserialize_input(expression)
     check_for_negatives(numbers)
+    numbers = delete_greater_than_1000.numbers
     numbers.inject(0, :+)
   end
 
@@ -51,6 +52,10 @@ class Calculator
   def check_for_negatives(numbers) 
     negatives = numbers.select { |num| num < 0 }
     raise_negatives_not_allowed(negatives) unless negatives.empty?
+  end
+
+  def delete_greater_than_1000(numbers)
+    numbers.delete_if { |x| x > 1000 }
   end
 
   def raise_negatives_not_allowed(negatives)
@@ -71,7 +76,7 @@ class InputDeserializer
   def get_numbers
     change_optional_delimiter_to_comma 
     change_newlines_to_comma
-    split_by_comma.map(&:to_i).delete_if{ |x| x > 1000 } 
+    split_by_comma.map(&:to_i)
   end
 
   def change_optional_delimiter_to_comma
