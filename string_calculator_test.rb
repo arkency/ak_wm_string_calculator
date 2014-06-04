@@ -79,6 +79,14 @@ module StringCalculator
       split_by_delimiters.map(&:to_i)
     end
 
+    def split_by_delimiters
+      @value.split(delimiters_regexp)
+    end
+
+    def delimiters_regexp
+      Regexp.new(delimiters.map{|delimiter| Regexp.escape(delimiter)}.join("|"))
+    end
+
     def delimiters
       default_delimiters + optional_delimiters
     end
@@ -113,14 +121,6 @@ module StringCalculator
 
     def between(string, left, right)
       string[/#{Regexp.escape(left)}(.+)#{Regexp.escape(right)}/m, 1]
-    end
-
-    def split_by_delimiters
-      @value.split(delimiters_regexp)
-    end
-
-    def delimiters_regexp
-      Regexp.new(delimiters.map{|delimiter| Regexp.escape(delimiter)}.join("|"))
     end
 
   end
