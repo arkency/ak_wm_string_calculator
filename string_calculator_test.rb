@@ -81,9 +81,7 @@ module StringCalculator
     end
 
     def change_optional_delimiter_to_comma
-      if has_optional_delimiter?
-        @value.gsub!(optional_delimiter, ",")
-      end
+      @value.gsub!(optional_delimiter, ",") if has_optional_delimiter?
     end
 
     def has_optional_delimiter?
@@ -103,15 +101,11 @@ module StringCalculator
     end
 
     def delimiter_declaration
-      between_first_occurrence(@value, "//", "\n")
+      between(@value, "//", "\n")
     end
 
     def between(string, left, right)
-      string.sub(left, '').reverse.sub(right.reverse, '').reverse
-    end
-
-    def between_first_occurrence(string, left, right)
-      string[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
+      string[/#{Regexp.escape(left)}(.+)#{Regexp.escape(right)}/m, 1]
     end
 
     def change_newlines_to_comma
