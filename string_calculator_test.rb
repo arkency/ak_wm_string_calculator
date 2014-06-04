@@ -103,14 +103,14 @@ class InputDeserializer
   end
 
   def delimiter_declaration
-    between_first_occurance(@value, "//", "\n")
+    between_first_occurrence(@value, "//", "\n")
   end
 
   def between(string, left, right)
     string.sub(left, '').reverse.sub(right.reverse, '').reverse
   end
 
-  def between_first_occurance(string, left, right)
+  def between_first_occurrence(string, left, right)
     string[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
   end
 
