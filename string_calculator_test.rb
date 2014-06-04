@@ -22,104 +22,105 @@ class StringCalculatorTest < Test::Unit::TestCase
   end
 
   def assert_not_allowed(message, expression)
-    assert_raise_with_message Calculator::NegativesNotAllowed, message do
+    assert_raise_with_message StringCalculator::Calculator::NegativesNotAllowed, message do
       calc.add(expression)
     end
   end
 
   def calc
-    Calculator.new
+    StringCalculator::Calculator.new
   end
 end
 
+module StringCalculator
+  class Calculator
 
-class Calculator
+    class NegativesNotAllowed < StandardError; end
 
-  class NegativesNotAllowed < StandardError; end
-
-  def add(expression)
-    numbers = deserialize_input(expression)
-    check_for_negatives(numbers)
-    numbers = delete_greater_than_1000(numbers)
-    numbers.inject(0, :+)
-  end
-
-  private
-  def deserialize_input(input) 
-    input = InputDeserializer.new(input)
-    input.get_numbers
-  end
-
-  def check_for_negatives(numbers) 
-    negatives = numbers.select { |num| num < 0 }
-    raise_negatives_not_allowed(negatives) unless negatives.empty?
-  end
-
-  def delete_greater_than_1000(numbers)
-    numbers.delete_if { |x| x > 1000 }
-  end
-
-  def raise_negatives_not_allowed(negatives)
-    raise NegativesNotAllowed.new(negatives_message(negatives))
-  end
-
-  def negatives_message(negatives)
-    "negatives are not allowed: #{negatives.join(", ")}"
-  end
-
-end
-
-class InputDeserializer
-  def initialize(value)
-    @value = value
-  end
-
-  def get_numbers
-    change_optional_delimiter_to_comma 
-    change_newlines_to_comma
-    split_by_comma.map(&:to_i)
-  end
-
-  def change_optional_delimiter_to_comma
-    if has_optional_delimiter?
-      @value.gsub!(optional_delimiter, ",")
+    def add(expression)
+      numbers = deserialize_input(expression)
+      check_for_negatives(numbers)
+      numbers = delete_greater_than_1000(numbers)
+      numbers.inject(0, :+)
     end
+
+    private
+    def deserialize_input(input) 
+      input = Input.new(input)
+      input.get_numbers
+    end
+
+    def check_for_negatives(numbers) 
+      negatives = numbers.select { |num| num < 0 }
+      raise_negatives_not_allowed(negatives) unless negatives.empty?
+    end
+
+    def delete_greater_than_1000(numbers)
+      numbers.delete_if { |x| x > 1000 }
+    end
+
+    def raise_negatives_not_allowed(negatives)
+      raise NegativesNotAllowed.new(negatives_message(negatives))
+    end
+
+    def negatives_message(negatives)
+      "negatives are not allowed: #{negatives.join(", ")}"
+    end
+
   end
 
-  def has_optional_delimiter?
-    @value.start_with?("//")
-  end
+  class Input
+    def initialize(value)
+      @value = value
+    end
 
-  def optional_delimiter
-    bracket_delimiter_declaration? ? between_brackets_part : delimiter_declaration
-  end
+    def get_numbers
+      change_optional_delimiter_to_comma 
+      change_newlines_to_comma
+      split_by_comma.map(&:to_i)
+    end
 
-  def between_brackets_part
-    between(delimiter_declaration, "[", "]")
-  end
+    def change_optional_delimiter_to_comma
+      if has_optional_delimiter?
+        @value.gsub!(optional_delimiter, ",")
+      end
+    end
 
-  def bracket_delimiter_declaration?
-    delimiter_declaration.start_with?("[") and delimiter_declaration.end_with?("]")
-  end
+    def has_optional_delimiter?
+      @value.start_with?("//")
+    end
 
-  def delimiter_declaration
-    between_first_occurrence(@value, "//", "\n")
-  end
+    def optional_delimiter
+      bracket_delimiter_declaration? ? between_brackets_part : delimiter_declaration
+    end
 
-  def between(string, left, right)
-    string.sub(left, '').reverse.sub(right.reverse, '').reverse
-  end
+    def between_brackets_part
+      between(delimiter_declaration, "[", "]")
+    end
 
-  def between_first_occurrence(string, left, right)
-    string[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
-  end
+    def bracket_delimiter_declaration?
+      delimiter_declaration.start_with?("[") and delimiter_declaration.end_with?("]")
+    end
 
-  def change_newlines_to_comma
-    @value.gsub!(/\n/, ',')
-  end
+    def delimiter_declaration
+      between_first_occurrence(@value, "//", "\n")
+    end
 
-  def split_by_comma
-    @value.split(",")
-  end
+    def between(string, left, right)
+      string.sub(left, '').reverse.sub(right.reverse, '').reverse
+    end
 
+    def between_first_occurrence(string, left, right)
+      string[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
+    end
+
+    def change_newlines_to_comma
+      @value.gsub!(/\n/, ',')
+    end
+
+    def split_by_comma
+      @value.split(",")
+    end
+
+  end
 end
