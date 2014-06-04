@@ -90,11 +90,16 @@ class InputDeserializer
   end
 
   def optional_delimiter
-    between("//", "\n")
+    delimiter_part = between(@value, "//", "\n")
+    if delimiter_part.start_with?("[") and delimiter_part.end_with?("]")
+      between(delimiter_part, "[", "]")
+    else
+      delimiter_part
+    end
   end
 
-  def between(left, right)
-    @value[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
+  def between(string, left, right)
+    string[/#{Regexp.escape(left)}(.*?)#{Regexp.escape(right)}/m, 1]
   end
 
   def change_newlines_to_comma
