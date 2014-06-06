@@ -14,6 +14,7 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(6, "//[]]]\n1]]2]]3]]2000")
     assert_add(6, "//[*][]]\n1]2*3")
     assert_add(6, "//[**][]]]\n1]]2**3")
+    assert_add(4, "//[2]\n123")
     assert_not_allowed('negatives are not allowed: -1', "1,-1")
     assert_not_allowed('negatives are not allowed: -1, -5, -7', "1,-1,2,3,4,-5,-7")
   end
