@@ -12,7 +12,7 @@ class StringCalculatorTest < Test::Unit::TestCase
     assert_add(2, "1001,2")
     assert_add(6, "//[***]\n1***2***3***2000")
     assert_add(6, "//[]]]\n1]]2]]3]]2000")
-    #assert_add(6, "//[*][]]\n1]2*3")
+    assert_add(6, "//[*][]]\n1]2*3")
     assert_not_allowed('negatives are not allowed: -1', "1,-1")
     assert_not_allowed('negatives are not allowed: -1, -5, -7', "1,-1,2,3,4,-5,-7")
   end
@@ -39,16 +39,15 @@ module StringCalculator
     class NegativesNotAllowed < StandardError; end
 
     def add(expression)
-      numbers = deserialize_input(expression)
+      numbers = numbers(expression)
       check_for_negatives(numbers)
-      numbers = delete_greater_than_1000(numbers)
-      numbers.inject(0, :+)
+      delete_greater_than_1000(numbers).inject(0, :+)
     end
 
     private
-    def deserialize_input(input) 
-      input = Input.new(input)
-      input.get_numbers
+
+    def numbers(expression)
+      expression.split(/[^0-9-]+/).map(&:to_i)
     end
 
     def check_for_negatives(numbers) 
@@ -68,72 +67,5 @@ module StringCalculator
       "negatives are not allowed: #{negatives.join(", ")}"
     end
 
-  end
-
-  class Input
-    def initialize(value)
-      @value = value
-    end
-
-    def get_numbers
-      split_by_delimiters.map(&:to_i)
-    end
-
-    def split_by_delimiters
-      @value.split(delimiters_regexp)
-    end
-
-    def delimiters_regexp
-      Regexp.new(delimiters.map{|delimiter| Regexp.escape(delimiter)}.join("|"))
-    end
-
-    def delimiters
-      default_delimiters + optional_delimiters
-    end
-
-    def default_delimiters
-      [",", "\n"]
-    end
-
-    def optional_delimiters
-      OptionalDelimitersParser.new(@value).delimiters
-    end
-
-  end
-
-  class OptionalDelimitersParser
-    def initialize(line)
-      @line = line
-    end
-
-    def delimiters
-      has_optional_delimiter? ? optional_delimiters : []
-    end
-
-    private
-
-    def has_optional_delimiter?
-      @line.start_with?("//")
-    end
-
-    def optional_delimiters
-      bracket_delimiter_declaration? ? brackets_delimiters : [delimiter_declaration]
-    end
-
-    def brackets_delimiters
-      [between(delimiter_declaration, "[", "]")]
-    end
-
-    def bracket_delimiter_declaration?
-      delimiter_declaration.start_with?("[")
-    end
-
-    def delimiter_declaration
-      between(@line, "//", "\n")
-    end
-
-    def between(string, left, right)
-      string[/#{Regexp.escape(left)}(.+)#{Regexp.escape(right)}/m, 1]
-    end
   end
 end
